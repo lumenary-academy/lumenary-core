@@ -1,0 +1,29 @@
+{
+  "lesson": "first-steps",
+  "exercises": [
+    {
+      "id": "hello-choice",
+      "type": "choice",
+      "prompt": "Which word means *hello*?",
+      "difficulty": "warm-up",
+      "mode": "H",
+      "hints": ["It starts with H."],
+      "solution": "**Hola.**",
+      "options": [
+        { "id": "a", "label": "Hola", "correct": true, "feedback": "Yes." },
+        { "id": "b", "label": "Adiós", "correct": false, "feedback": "Not yet: that is goodbye." }
+      ]
+    },
+    {
+      "id": "hello-text",
+      "type": "text",
+      "prompt": "Write *hello* in Spanish.",
+      "difficulty": "core",
+      "mode": "H",
+      "hints": ["Four letters."],
+      "solution": "Hola.",
+      "answers": ["hola"],
+      "lang": "es"
+    }
+  ]
+}

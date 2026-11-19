@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": "demo",
+  "division": "lingua",
+  "title": "Demo, taught in English",
+  "subtitle": "A *tiny* course for the tests.",
+  "description": ["A course with two lessons in one level."],
+  "locale": "en",
+  "learn": "es",
+  "ui": {
+    "levels": "Levels",
+    "lesson": "Lesson",
+    "lessons": "lessons",
+    "minutes": "min",
+    "objectives": "In this lesson you will",
+    "prerequisites": "Builds on",
+    "none": "Nothing: start here.",
+    "references": "Further reading",
+    "previous": "Previous",
+    "next": "Next",
+    "contents": "In this lesson",
+    "aiDrafted": "AI-drafted",
+    "awaitingReview": "Awaiting review",
+    "backTo": "Back to"
+  },
+  "levels": [{ "id": "a1", "title": "Beginner", "short": "A1", "summary": "The start.", "lessons": ["first-steps", "next-steps"] }]
+}
