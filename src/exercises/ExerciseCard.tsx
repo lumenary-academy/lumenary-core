@@ -1,13 +1,11 @@
 "use client";
 
-import { Check, ChevronDown, Lightbulb, Loader2, Play, RotateCcw, Sparkles } from "lucide-react";
-import { useId, useState } from "react";
-import { useI18n } from "@/i18n/client";
-import { recordAttempt } from "@/lib/progress";
-import { runPython } from "@/lib/python-sandbox";
-import { CodeEditor } from "@/components/python/CodeEditor";
+import { Check, ChevronDown, Lightbulb, Sparkles } from "lucide-react";
+import { useId, useState, type ComponentType } from "react";
+import { useI18n } from "../i18n/client";
+import { recordAttempt } from "../progress";
 import { checkText, normalizeText, parseInteger, parseSet, setKey, setsEqual, normalizeElement } from "./parse";
-import type { RenderedExercise } from "./types";
+import type { OnResult, RenderedCoreExercise, RenderedExercise } from "./types";
 
 type Verdict = { ok: boolean; html?: string; text?: string } | null;
 
@@ -19,7 +17,18 @@ const DIFF_STYLE = {
   stretch: "bg-formal-soft text-formal",
 } as const;
 
-export function ExerciseCard({ exercise, index }: { exercise: RenderedExercise; index?: number }) {
+/** The answer area for one exercise type. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ExerciseBody = ComponentType<{ exercise: any; onResult: OnResult }>;
+
+type Core<T extends RenderedCoreExercise["type"]> = Extract<RenderedCoreExercise, { type: T }>;
+
+/**
+ * One exercise: prompt, answer area, feedback, progressive hints and a worked solution. The core
+ * checks `choice`, `integer`, `set` and `text` answers in the browser; a site adds its own types
+ * (Lumenary Scientia's `python`) by wrapping this card in a client component that passes `bodies`.
+ */
+export function ExerciseCard({ exercise, index, bodies }: { exercise: RenderedExercise; index?: number; bodies?: Record<string, ExerciseBody> }) {
   const { t } = useI18n();
   const uid = useId();
   const [hintsShown, setHintsShown] = useState(0);
@@ -46,11 +55,11 @@ export function ExerciseCard({ exercise, index }: { exercise: RenderedExercise; 
       <div className="space-y-4 px-5 py-5">
         <Html html={exercise.promptHtml} className="prose-lumen text-[1.02rem]" />
 
-        {exercise.type === "choice" && <ChoiceBody exercise={exercise} onResult={report} />}
-        {exercise.type === "integer" && <IntegerBody exercise={exercise} onResult={report} />}
-        {exercise.type === "set" && <SetBody exercise={exercise} onResult={report} />}
-        {exercise.type === "python" && <PythonBody exercise={exercise} onResult={report} />}
-        {exercise.type === "text" && <TextBody exercise={exercise} onResult={report} />}
+        {exercise.type === "choice" && <ChoiceBody exercise={exercise as Core<"choice">} onResult={report} />}
+        {exercise.type === "integer" && <IntegerBody exercise={exercise as Core<"integer">} onResult={report} />}
+        {exercise.type === "set" && <SetBody exercise={exercise as Core<"set">} onResult={report} />}
+        {exercise.type === "text" && <TextBody exercise={exercise as Core<"text">} onResult={report} />}
+        {bodies?.[exercise.type] && <Extra Body={bodies[exercise.type]!} exercise={exercise} onResult={report} />}
 
         <div aria-live="polite">
           {verdict && (
@@ -100,9 +109,11 @@ export function ExerciseCard({ exercise, index }: { exercise: RenderedExercise; 
   );
 }
 
-type OnResult = (ok: boolean, detail?: { html?: string; text?: string }) => void;
+function Extra({ Body, exercise, onResult }: { Body: ExerciseBody; exercise: RenderedExercise; onResult: OnResult }) {
+  return <Body exercise={exercise} onResult={onResult} />;
+}
 
-function ChoiceBody({ exercise, onResult }: { exercise: Extract<RenderedExercise, { type: "choice" }>; onResult: OnResult }) {
+function ChoiceBody({ exercise, onResult }: { exercise: Core<"choice">; onResult: OnResult }) {
   const { t } = useI18n();
   const [picked, setPicked] = useState<string[]>([]);
   const name = useId();
@@ -143,7 +154,7 @@ function ChoiceBody({ exercise, onResult }: { exercise: Extract<RenderedExercise
   );
 }
 
-function IntegerBody({ exercise, onResult }: { exercise: Extract<RenderedExercise, { type: "integer" }>; onResult: OnResult }) {
+function IntegerBody({ exercise, onResult }: { exercise: Core<"integer">; onResult: OnResult }) {
   const { t } = useI18n();
   const [value, setValue] = useState("");
   const id = useId();
@@ -173,7 +184,7 @@ function IntegerBody({ exercise, onResult }: { exercise: Extract<RenderedExercis
   );
 }
 
-function SetBody({ exercise, onResult }: { exercise: Extract<RenderedExercise, { type: "set" }>; onResult: OnResult }) {
+function SetBody({ exercise, onResult }: { exercise: Core<"set">; onResult: OnResult }) {
   const { t } = useI18n();
   const [value, setValue] = useState("");
   const id = useId();
@@ -210,7 +221,7 @@ function SetBody({ exercise, onResult }: { exercise: Extract<RenderedExercise, {
   );
 }
 
-function TextBody({ exercise, onResult }: { exercise: Extract<RenderedExercise, { type: "text" }>; onResult: OnResult }) {
+function TextBody({ exercise, onResult }: { exercise: Core<"text">; onResult: OnResult }) {
   const { t } = useI18n();
   const [value, setValue] = useState("");
   const id = useId();
@@ -237,45 +248,5 @@ function TextBody({ exercise, onResult }: { exercise: Extract<RenderedExercise, 
         {t("exercise.check")}
       </button>
     </form>
-  );
-}
-
-function PythonBody({ exercise, onResult }: { exercise: Extract<RenderedExercise, { type: "python" }>; onResult: OnResult }) {
-  const { t } = useI18n();
-  const [code, setCode] = useState(exercise.starter);
-  const [busy, setBusy] = useState(false);
-  const [out, setOut] = useState("");
-  const run = async () => {
-    setBusy(true);
-    setOut("");
-    try {
-      const res = await runPython(code, { tests: exercise.tests, timeoutMs: 15000 });
-      setOut(res.stdout.trim());
-      if (res.ok) onResult(true, { text: t("exercise.allPassed") });
-      else onResult(false, { text: res.timedOut ? t("python.timeout", { seconds: 15 }) : `${t("exercise.someFailed")}\n\n${res.error ?? ""}` });
-    } catch {
-      onResult(false, { text: t("python.offline") });
-    }
-    setBusy(false);
-  };
-  return (
-    <div className="overflow-hidden rounded-xl border border-line bg-card">
-      <CodeEditor value={code} onChange={setCode} label={t("python.edit")} minRows={8} />
-      <div className="flex flex-wrap items-center gap-2 border-t border-line bg-paper-2/60 px-3 py-2.5">
-        <button type="button" className="btn btn-sm bg-compute text-white" onClick={run} disabled={busy}>
-          {busy ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <Play size={14} aria-hidden="true" />}
-          {busy ? t("exercise.running") : t("exercise.runTests")}
-        </button>
-        <button type="button" className="btn btn-sm btn-ghost" onClick={() => setCode(exercise.starter)}>
-          <RotateCcw size={13} aria-hidden="true" /> {t("exercise.reset")}
-        </button>
-        <span className="ms-auto text-xs text-muted">{t("python.sandbox")}</span>
-      </div>
-      {out && (
-        <pre dir="ltr" className="whitespace-pre-wrap border-t border-line px-4 py-3 font-mono text-xs text-ink-2">
-          {out}
-        </pre>
-      )}
-    </div>
   );
 }

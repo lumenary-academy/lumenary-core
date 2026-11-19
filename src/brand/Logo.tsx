@@ -10,12 +10,16 @@ export function LogoMark({ size = 32, className = "" }: { size?: number; classNa
   );
 }
 
-export function Wordmark({ className = "" }: { className?: string }) {
+/**
+ * "Lumenary" over the name of the academy or one of its divisions: "Lumenary Academy" (the default),
+ * "Lumenary Scientia", "Lumenary Lingua", "Lumenary Prep". The brand is never "The Lumenary".
+ */
+export function Wordmark({ className = "", division = "Academy" }: { className?: string; division?: string }) {
   return (
     // Stacked so the longer name takes no more width in the header than "Lumenary" alone.
     <span className={`inline-flex flex-col font-display leading-none ${className}`}>
       <span className="text-[1.2rem] font-semibold tracking-tight text-ink">Lumenary</span>
-      <span className="mt-1 text-[0.6rem] font-medium uppercase tracking-[0.3em] text-ink-2">Academy</span>
+      <span className="mt-1 text-[0.6rem] font-medium uppercase tracking-[0.3em] text-ink-2">{division}</span>
     </span>
   );
 }

@@ -2,7 +2,7 @@
 
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useI18n } from "@/i18n/client";
+import { useI18n } from "../i18n/client";
 import { THEME_KEY as KEY } from "./init-scripts";
 
 type Theme = "system" | "light" | "dark";

@@ -2,7 +2,7 @@
 
 import { Volume2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useI18n } from "@/i18n/client";
+import { useI18n } from "../i18n/client";
 
 /**
  * A word or phrase in the language being learned, with a button that reads it aloud using the

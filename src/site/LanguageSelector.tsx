@@ -3,28 +3,20 @@
 import { Check, Globe } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useId, useRef, useState } from "react";
-import { LOCALES, LOCALE_META, type Locale } from "@/i18n/config";
-import { useI18n } from "@/i18n/client";
-import { href, pageLocale } from "@/lib/href";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { LOCALES, LOCALE_META, LOCALE_UI_STATUS as STATUS, type Locale } from "../i18n/config";
+import { useI18n } from "../i18n/client";
+import { createRouting, type RoutingConfig } from "../routing";
 
-const STATUS: Record<Locale, "canonical" | "machine-draft"> = {
-  en: "canonical",
-  es: "machine-draft",
-  ar: "machine-draft",
-  hi: "machine-draft",
-  "zh-Hans": "machine-draft",
-  sw: "machine-draft",
-};
-
-/** For a page that does not exist in locale `l` (an untranslated lesson, a lab detail page), the nearest page that does. */
-function sectionHref(l: Locale, rest: string): string {
-  if (rest.startsWith("math/lessons/")) return href(l, "math/curriculum");
-  return href(l, rest.split("/")[0]);
-}
-
-export function LanguageSelector() {
+/**
+ * The language menu. Each language links to the same page in that language, or, for a page that does
+ * not exist there (an untranslated lesson, a course taught in another language), to the nearest page
+ * that does, as the site's `routing` describes. `allLanguagesPath` links a page listing every language
+ * and its status, when the site has one.
+ */
+export function LanguageSelector({ routing, allLanguagesPath }: { routing?: RoutingConfig; allLanguagesPath?: string }) {
   const { locale, t } = useI18n();
+  const { href, switchHref } = useMemo(() => createRouting(routing), [routing]);
   const pathname = usePathname() ?? `/${locale}/`;
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -73,7 +65,7 @@ export function LanguageSelector() {
               <li key={l}>
                 <Link
                   role="menuitem"
-                  href={pageLocale(l, rest) === l ? `/${l}/${rest}` : sectionHref(l, rest)}
+                  href={switchHref(l, rest)}
                   hrefLang={l}
                   lang={l}
                   onClick={() => {
@@ -93,9 +85,11 @@ export function LanguageSelector() {
               </li>
             ))}
           </ul>
-          <Link href={href(locale, "languages")} className="link mt-1 block px-2.5 py-2 text-xs" onClick={() => setOpen(false)}>
-            {t("language.allLanguages")} →
-          </Link>
+          {allLanguagesPath !== undefined && (
+            <Link href={href(locale, allLanguagesPath)} className="link mt-1 block px-2.5 py-2 text-xs" onClick={() => setOpen(false)}>
+              {t("language.allLanguages")} →
+            </Link>
+          )}
         </div>
       )}
     </div>

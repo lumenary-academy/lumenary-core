@@ -4,6 +4,9 @@
  */
 export type NarratorId = "chloe" | "margaret" | "gideon";
 
+/** The three cat guides, in the order the site introduces them. */
+export const NARRATORS: readonly NarratorId[] = ["chloe", "margaret", "gideon"];
+
 const HEAD = "M14 27 11.5 9.5 25 18.2Q32 15.8 39 18.2L52.5 9.5 50 27Q54 34.5 52 42.5 47.5 54.5 32 55.5 16.5 54.5 12 42.5 10 34.5 14 27Z";
 
 function Face({ eye, pupil = "#1d1d1f" }: { eye: string; pupil?: string }) {

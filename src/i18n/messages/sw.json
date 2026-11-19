@@ -1,0 +1,203 @@
+{
+  "meta": {
+    "siteName": "Lumenary Academy",
+    "tagline": "Sayansi zote. Lugha nyingi. Kila taifa.",
+    "description": "Lumenary Academy: kozi za bure za chanzo huria za hisabati, sayansi ya kompyuta, uhandisi na sayansi, kozi za lugha, na maandalizi ya mitihani."
+  },
+  "nav": {
+    "skip": "Ruka hadi maudhui",
+    "menu": "Menyu",
+    "close": "Funga",
+    "home": "Mwanzo",
+    "about": "Kuhusu",
+    "short": {
+      "about": "Kuhusu"
+    }
+  },
+  "theme": {
+    "label": "Mandhari ya rangi",
+    "system": "Kufuata mfumo",
+    "light": "Angavu",
+    "dark": "Giza"
+  },
+  "cats": {
+    "label": "Paka waongozaji",
+    "show": "Onyesha paka waongozaji",
+    "hide": "Ficha paka waongozaji"
+  },
+  "language": {
+    "label": "Lugha",
+    "choose": "Chagua lugha",
+    "demoNote": "Lugha sita za majaribio. Tafsiri zisizo za Kiingereza ni rasimu zilizotengenezwa na mashine zinazosubiri kukaguliwa na binadamu.",
+    "allLanguages": "Tazama lugha zote na hali zake",
+    "status": {
+      "canonical": "Chanzo rasmi",
+      "machine-draft": "Rasimu ya mashine · haijakaguliwa",
+      "human-reviewed": "Imekaguliwa na binadamu",
+      "math-reviewed": "Imekaguliwa kihisabati",
+      "incomplete": "Haijakamilika"
+    },
+    "fallbackNotice": "Ukurasa huu bado haujatafsiriwa kwa {language}, kwa hiyo unaonyeshwa kwa {fallback}.",
+    "draftNotice": "Hii ni rasimu ya tafsiri iliyotengenezwa na mashine. Bado haijakaguliwa na binadamu wala mwanahisabati.",
+    "staleNotice": "Matini asilia yamebadilika tangu tafsiri hii ilipofanywa; huenda imepitwa na wakati.",
+    "helpTranslate": "Saidia kutafsiri"
+  },
+  "modes": {
+    "H": "Kibinadamu",
+    "F": "Rasmi",
+    "C": "Kikokotozi",
+    "all": "Njia zote",
+    "lens": "Lenzi",
+    "lensHelp": "Angazia njia moja ya kufikiri"
+  },
+  "common": {
+    "learnMore": "Jifunze zaidi",
+    "back": "Rudi",
+    "open": "Fungua",
+    "comingSoon": "Imepangwa",
+    "optional": "Hiari",
+    "show": "Onyesha",
+    "hide": "Ficha",
+    "copy": "Nakili",
+    "copied": "Imenakiliwa",
+    "yes": "Ndiyo",
+    "no": "Hapana",
+    "loading": "Inapakia…"
+  },
+  "sections": {
+    "motivation": "Kichocheo",
+    "intuition": "Ufahamu wa ndani",
+    "definitions": "Fasili",
+    "examples": "Mifano iliyofanyiwa kazi",
+    "human": "Maelezo",
+    "proof": "Uthibitisho",
+    "formal": "Hisabati rasmi",
+    "computation": "Ukokotoaji",
+    "visualization": "Chunguza",
+    "exercises": "Mazoezi",
+    "misconceptions": "Mawazo potofu ya kawaida",
+    "trails": "Njia za Maajabu",
+    "sets": "Uhusiano na nadharia ya seti",
+    "categories": "Uhusiano na nadharia ya kategoria",
+    "history": "Historia na muktadha wa dunia",
+    "reading": "Usomaji zaidi",
+    "reflection": "Tafakari ya hiari",
+    "viewpoints": "Mitazamo",
+    "vocabulary": "Msamiati",
+    "grammar": "Sarufi",
+    "dialogue": "Mazungumzo",
+    "pronunciation": "Matamshi",
+    "culture": "Utamaduni"
+  },
+  "blocks": {
+    "definition": "Fasili",
+    "theorem": "Nadharia",
+    "proof": "Uthibitisho",
+    "example": "Mfano",
+    "misconception": "Wazo potofu",
+    "note": "Dokezo",
+    "reflection": "Tafakari ya Kikristo ya hiari",
+    "reflectionNote": "Tafakari kutoka katika mapokeo ya Kikristo yanayoihamasisha Lumenary Academy. Si sehemu ya hisabati, na uko huru kuiruka.",
+    "showReflection": "Soma tafakari",
+    "hideReflection": "Ficha",
+    "analogy": "Mlinganisho, si muundo rasmi",
+    "forGrownUps": "Kwa watu wazima",
+    "qed": "∎"
+  },
+  "lenses": {
+    "sets": "Nadharia ya seti",
+    "categories": "Nadharia ya kategoria",
+    "topology": "Topolojia",
+    "geometry": "Jiometri",
+    "analysis": "Uchanganuzi",
+    "algebra": "Aljebra",
+    "number-theory": "Nadharia ya namba",
+    "combinatorics": "Kombinatoria",
+    "probability": "Uwezekano",
+    "logic": "Mantiki",
+    "computation": "Ukokotoaji",
+    "physics": "Fizikia"
+  },
+  "narrators": {
+    "chloe": "Chloe",
+    "chloeRole": "Mwanahisabati",
+    "chloeQ": "Kwa nini hili ni kweli?",
+    "margaret": "Margaret",
+    "margaretRole": "Mkokotoaji",
+    "margaretQ": "Itakuwaje tukikokotoa?",
+    "gideon": "Gideon",
+    "gideonRole": "Mfuasi wa urasmi",
+    "gideonQ": "Je, tunaweza kuthibitisha hili kwa usahihi?"
+  },
+  "lesson": {
+    "objectives": "Utajifunza",
+    "prerequisites": "Inajengwa juu ya",
+    "noPrerequisites": "Hakuna masharti ya awali — anza hapa!",
+    "minutes": "dakika {n}",
+    "contents": "Katika ukurasa huu",
+    "next": "Somo linalofuata",
+    "previous": "Somo lililopita",
+    "sequence": "Mfuatano wa masomo",
+    "inThisLesson": "Katika somo hili",
+    "narrators": "Waongozaji wako",
+    "translation": "Tafsiri"
+  },
+  "exercise": {
+    "check": "Kagua",
+    "tryAgain": "Jaribu tena",
+    "hint": "Onyesha kidokezo",
+    "nextHint": "Kidokezo kingine",
+    "hintN": "Kidokezo {n} kati ya {total}",
+    "solution": "Onyesha suluhisho kamili",
+    "hideSolution": "Ficha suluhisho",
+    "correct": "Ndiyo — hilo ni sahihi.",
+    "notYet": "Bado. Makosa ni sehemu ya kujifunza — angalia tena.",
+    "answerPlaceholder": "Jibu lako",
+    "setPlaceholder": "k.m. {1, 2, 3}",
+    "setHelp": "Andika elementi zikitenganishwa kwa koma. Mpangilio na marudio hayajalishi — sawa kabisa na katika seti!",
+    "integerPlaceholder": "Namba kamili, k.m. −4",
+    "parseError": "Sikuweza kusoma hilo — kagua muundo kisha ujaribu tena.",
+    "chooseOne": "Chagua moja",
+    "chooseAll": "Chagua yote yanayohusika",
+    "difficulty": {
+      "warm-up": "Kupasha moto",
+      "core": "Msingi",
+      "stretch": "Changamoto"
+    },
+    "textPlaceholder": "Andika jibu lako",
+    "accents": "Karibu: alama za lafudhi pekee ndizo tofauti. Kagua kila alama na ujaribu tena."
+  },
+  "trail": {
+    "revealHint": "Funua kidokezo {n}"
+  },
+  "lingua": {
+    "say": "Sikiliza"
+  },
+  "footer": {
+    "mission": "Akademia ya sayansi na lugha ya bure, ya chanzo huria, iliyohamasishwa na imani ya Kikristo, inayomkaribisha kila mwanafunzi.",
+    "license": "Msimbo: Apache-2.0 · Maudhui: CC BY-SA 4.0",
+    "noEndorsement": "Mradi huru. Hakuna uidhinishaji wa taasisi yoyote unaodokezwa.",
+    "openSource": "Chanzo huria",
+    "sourceCode": "Msimbo chanzo",
+    "codeLicence": "Leseni ya msimbo: Apache-2.0",
+    "contentLicence": "Leseni ya maudhui: CC BY-SA 4.0"
+  },
+  "divisions": {
+    "eyebrow": "Vitengo vitatu",
+    "lead": "Lumenary Scientia hufundisha sayansi, bure na kwa msimbo huria milele. Lumenary Lingua hufundisha lugha. Lumenary Prep huwaandaa wanafunzi kwa mitihani, kama huduma ya kulipia.",
+    "available": "Inapatikana",
+    "pending": "Inasubiri",
+    "scientiaWhat": "Sayansi",
+    "scientiaBadge": "Bure na chanzo huria",
+    "scientiaText": "Hakuna akaunti, hakuna matangazo na hakuna viwango vya kulipia, sasa na daima. Kila fani inaanzia hatua za kwanza hadi mipaka ya maarifa, katika masomo ya rasimu ya kwanza yanayosubiri mapitio ya binadamu. Sayansi nyingine zitafuata, zikijengwa kwa njia ileile.",
+    "scientiaCta": "Tazama fani",
+    "linguaWhat": "Lugha",
+    "linguaText": "Kila lugha hufundishwa kupitia lugha ambayo mwanafunzi tayari anaijua. Kozi mbili za kwanza ziko wazi, kutoka A1 hadi C2: Kihispania kwa Kiingereza, na Kiingereza kwa Kihispania. Jozi zaidi zitafuata, kuanzia na lugha zinazozungumzwa zaidi duniani.",
+    "linguaCta": "Tazama kozi za lugha",
+    "prepWhat": "Maandalizi ya mitihani",
+    "prepBadge": "Ya kulipia",
+    "prepText": "Kozi za mitihani ya kujiunga na vyuo, mitihani ya lugha ya Kiingereza na mitihani ya kitaaluma, zilizojengwa kutoka vyanzo rasmi vya kila mtihani. Bei moja kwa kila kozi, inayolipwa mara moja, kwa ufikiaji wa maisha yote. Kulipia Prep hakuhitajiki kamwe ili kutumia Scientia.",
+    "prepCta": "Tembelea Lumenary Prep",
+    "more": "Zaidi kuhusu vitengo vitatu"
+  }
+}

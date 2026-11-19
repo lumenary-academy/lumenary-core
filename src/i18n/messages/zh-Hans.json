@@ -1,0 +1,203 @@
+{
+  "meta": {
+    "siteName": "Lumenary Academy",
+    "tagline": "所有科学。多种语言。每个国家。",
+    "description": "Lumenary Academy：免费、开源的数学、计算机科学、工程与科学课程，语言课程，以及考试备考。"
+  },
+  "nav": {
+    "skip": "跳到正文",
+    "menu": "菜单",
+    "close": "关闭",
+    "home": "首页",
+    "about": "关于",
+    "short": {
+      "about": "关于"
+    }
+  },
+  "theme": {
+    "label": "配色主题",
+    "system": "跟随系统",
+    "light": "浅色",
+    "dark": "深色"
+  },
+  "cats": {
+    "label": "小猫向导",
+    "show": "显示小猫向导",
+    "hide": "隐藏小猫向导"
+  },
+  "language": {
+    "label": "语言",
+    "choose": "选择语言",
+    "demoNote": "六种演示语言。除英语外，所有译文都是机器生成的草稿，尚待人工审校。",
+    "allLanguages": "查看所有语言及其状态",
+    "status": {
+      "canonical": "规范源文本",
+      "machine-draft": "机器草稿 · 未审校",
+      "human-reviewed": "已经人工审校",
+      "math-reviewed": "已经数学审校",
+      "incomplete": "不完整"
+    },
+    "fallbackNotice": "本页尚未翻译成{language}，因此以{fallback}显示。",
+    "draftNotice": "这是机器生成的译文草稿，尚未经过人工或数学专业人士审校。",
+    "staleNotice": "本译文完成后，原文已有改动；译文可能已经过时。",
+    "helpTranslate": "帮助翻译"
+  },
+  "modes": {
+    "H": "人类思维",
+    "F": "形式化",
+    "C": "计算",
+    "all": "所有方式",
+    "lens": "视角",
+    "lensHelp": "突出显示一种推理方式"
+  },
+  "common": {
+    "learnMore": "了解更多",
+    "back": "返回",
+    "open": "打开",
+    "comingSoon": "计划中",
+    "optional": "可选",
+    "show": "显示",
+    "hide": "隐藏",
+    "copy": "复制",
+    "copied": "已复制",
+    "yes": "是",
+    "no": "否",
+    "loading": "加载中…"
+  },
+  "sections": {
+    "motivation": "引入",
+    "intuition": "直觉",
+    "definitions": "定义",
+    "examples": "例题讲解",
+    "human": "讲解",
+    "proof": "证明",
+    "formal": "形式化数学",
+    "computation": "计算",
+    "visualization": "探索",
+    "exercises": "练习",
+    "misconceptions": "常见误解",
+    "trails": "探奇小径",
+    "sets": "与集合论的联系",
+    "categories": "与范畴论的联系",
+    "history": "历史与全球视野",
+    "reading": "延伸阅读",
+    "reflection": "可选的默想",
+    "viewpoints": "多种视角",
+    "vocabulary": "词汇",
+    "grammar": "语法",
+    "dialogue": "对话",
+    "pronunciation": "发音",
+    "culture": "文化"
+  },
+  "blocks": {
+    "definition": "定义",
+    "theorem": "定理",
+    "proof": "证明",
+    "example": "例",
+    "misconception": "误解",
+    "note": "注",
+    "reflection": "可选的基督教默想",
+    "reflectionNote": "这是一段来自基督教传统的默想，这一传统启发了 Lumenary Academy。它不属于数学内容，你完全可以跳过。",
+    "showReflection": "阅读默想",
+    "hideReflection": "隐藏",
+    "analogy": "这是类比，不是形式化构造",
+    "forGrownUps": "给大人看的",
+    "qed": "∎"
+  },
+  "lenses": {
+    "sets": "集合论",
+    "categories": "范畴论",
+    "topology": "拓扑学",
+    "geometry": "几何学",
+    "analysis": "分析学",
+    "algebra": "代数学",
+    "number-theory": "数论",
+    "combinatorics": "组合数学",
+    "probability": "概率论",
+    "logic": "逻辑",
+    "computation": "计算",
+    "physics": "物理学"
+  },
+  "narrators": {
+    "chloe": "Chloe",
+    "chloeRole": "数学家",
+    "chloeQ": "为什么这是对的？",
+    "margaret": "Margaret",
+    "margaretRole": "计算家",
+    "margaretQ": "如果算一算，会怎么样？",
+    "gideon": "Gideon",
+    "gideonRole": "形式主义者",
+    "gideonQ": "我们能精确地证明它吗？"
+  },
+  "lesson": {
+    "objectives": "你将学会",
+    "prerequisites": "前置知识",
+    "noPrerequisites": "没有前置要求——从这里开始吧！",
+    "minutes": "{n} 分钟",
+    "contents": "本页内容",
+    "next": "下一课",
+    "previous": "上一课",
+    "sequence": "课程顺序",
+    "inThisLesson": "本课内容",
+    "narrators": "你的向导",
+    "translation": "翻译"
+  },
+  "exercise": {
+    "check": "检查",
+    "tryAgain": "再试一次",
+    "hint": "显示提示",
+    "nextHint": "再给一个提示",
+    "hintN": "提示 {n}/{total}",
+    "solution": "显示详细解答",
+    "hideSolution": "隐藏解答",
+    "correct": "对——答对了。",
+    "notYet": "还没有。错误是学习的一部分——再看一看。",
+    "answerPlaceholder": "你的答案",
+    "setPlaceholder": "例如 {1, 2, 3}",
+    "setHelp": "用逗号分隔各个元素。顺序和重复都无关紧要——就像集合一样！",
+    "integerPlaceholder": "一个整数，例如 −4",
+    "parseError": "无法识别这个输入——请检查格式后再试。",
+    "chooseOne": "选择一项",
+    "chooseAll": "选择所有符合的选项",
+    "difficulty": {
+      "warm-up": "热身",
+      "core": "核心",
+      "stretch": "挑战"
+    },
+    "textPlaceholder": "输入你的答案",
+    "accents": "差一点：只是重音符号不同。检查每个重音符号后再试一次。"
+  },
+  "trail": {
+    "revealHint": "显示提示 {n}"
+  },
+  "lingua": {
+    "say": "朗读"
+  },
+  "footer": {
+    "mission": "一所免费、开源、受基督教启发的科学与语言学院，欢迎每一位学习者。",
+    "license": "代码：Apache-2.0 · 内容：CC BY-SA 4.0",
+    "noEndorsement": "这是一个独立项目，不代表任何机构的认可。",
+    "openSource": "开源",
+    "sourceCode": "源代码",
+    "codeLicence": "代码许可：Apache-2.0",
+    "contentLicence": "内容许可：CC BY-SA 4.0"
+  },
+  "divisions": {
+    "eyebrow": "三个分部",
+    "lead": "Lumenary Scientia 教授科学，永远免费、开源。Lumenary Lingua 教授语言。Lumenary Prep 作为付费服务，帮助学习者备考。",
+    "available": "已开放",
+    "pending": "筹备中",
+    "scientiaWhat": "科学",
+    "scientiaBadge": "免费、开源",
+    "scientiaText": "无需账户，没有广告，没有付费等级，现在如此，永远如此。每个学科都从入门一直延伸到前沿，课程为初稿，等待人工审阅。更多科学将以同样方式陆续推出。",
+    "scientiaCta": "查看学科",
+    "linguaWhat": "语言",
+    "linguaText": "每种语言都通过学习者已经掌握的一种语言来教授。最初的两门课程已经开放，从 A1 到 C2：用英语教西班牙语，用西班牙语教英语。更多语言组合将陆续推出，从世界上使用最广的语言开始。",
+    "linguaCta": "查看语言课程",
+    "prepWhat": "备考",
+    "prepBadge": "付费",
+    "prepText": "面向入学考试、英语语言考试和职业考试的课程，依据每项考试的官方资料编写。每门课程一个价格，一次付费，终身使用。使用 Scientia 从不需要为 Prep 付费。",
+    "prepCta": "访问 Lumenary Prep",
+    "more": "进一步了解三个分部"
+  }
+}

@@ -1,8 +1,8 @@
 /**
- * Demonstration UI locales. These six were chosen to exercise the
- * architecture across language families, scripts, writing directions and
- * regions — they are NOT a claim of global coverage. The full registry of
- * target languages lives in content/registry/languages.json.
+ * Demonstration UI locales, shared by every Lumenary site. These six were chosen to exercise the
+ * architecture across language families, scripts, writing directions and regions — they are NOT a
+ * claim of global coverage. The full registry of target languages lives in the main repository's
+ * content/registry/languages.json.
  */
 export const LOCALES = ["en", "es", "ar", "hi", "zh-Hans", "sw"] as const;
 export type Locale = (typeof LOCALES)[number];
@@ -28,6 +28,16 @@ export const LOCALE_META: Record<Locale, LocaleMeta> = {
   sw: { tag: "sw", name: "Swahili", nativeName: "Kiswahili", dir: "ltr", script: "Latn", family: "Niger-Congo · Bantu", intl: "sw" },
 };
 
+/** The state of each locale's interface strings: English is the source; the others are unreviewed machine drafts. */
+export const LOCALE_UI_STATUS: Record<Locale, "canonical" | "machine-draft"> = {
+  en: "canonical",
+  es: "machine-draft",
+  ar: "machine-draft",
+  hi: "machine-draft",
+  "zh-Hans": "machine-draft",
+  sw: "machine-draft",
+};
+
 export function isLocale(value: string): value is Locale {
   return (LOCALES as readonly string[]).includes(value);
 }
@@ -48,4 +58,17 @@ export function negotiateLocale(preferences: readonly string[]): Locale {
     if (match) return match;
   }
   return DEFAULT_LOCALE;
+}
+
+/**
+ * A language's name, written in a display locale, from the runtime's CLDR data (Intl.DisplayNames):
+ * `languageName("es", "en")` is "Spanish", `languageName("en", "es")` is "inglés". Falls back to the tag.
+ */
+export function languageName(tag: string, displayLocale: string): string {
+  try {
+    const intl = isLocale(displayLocale) ? LOCALE_META[displayLocale].intl : displayLocale;
+    return new Intl.DisplayNames([intl], { type: "language", fallback: "code" }).of(tag) ?? tag;
+  } catch {
+    return tag;
+  }
 }

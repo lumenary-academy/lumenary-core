@@ -1,10 +1,14 @@
 import { Languages } from "lucide-react";
 import Link from "next/link";
-import { LOCALE_META, type Locale } from "@/i18n/config";
-import type { TFunction } from "@/i18n/dictionary";
-import { href } from "@/lib/href";
+import { LOCALE_META, type Locale } from "../i18n/config";
+import type { TFunction } from "../i18n/translate";
 
-export function TranslationNotice({ t, requested, rendered, fallback, stale, status }: { t: TFunction; requested: Locale; rendered: Locale; fallback: boolean; stale: boolean; status: string }) {
+/**
+ * Says when a page is shown in another language than the one asked for, is an unreviewed machine
+ * draft, or was translated from an older original. `helpHref` links to the site's page on helping
+ * with translations, when it has one.
+ */
+export function TranslationNotice({ t, requested, rendered, fallback, stale, status, helpHref }: { t: TFunction; requested: Locale; rendered: Locale; fallback: boolean; stale: boolean; status: string; helpHref?: string }) {
   if (requested === "en") return null;
   const messages: string[] = [];
   if (fallback) messages.push(t("language.fallbackNotice", { language: LOCALE_META[requested].nativeName, fallback: LOCALE_META[rendered].nativeName }));
@@ -18,9 +22,11 @@ export function TranslationNotice({ t, requested, rendered, fallback, stale, sta
         {messages.map((m) => (
           <p key={m}>{m}</p>
         ))}
-        <Link href={href(requested, "contribute")} className="link text-xs">
-          {t("language.helpTranslate")} →
-        </Link>
+        {helpHref && (
+          <Link href={helpHref} className="link text-xs">
+            {t("language.helpTranslate")} →
+          </Link>
+        )}
       </div>
     </div>
   );

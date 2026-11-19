@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useI18n } from "@/i18n/client";
-import { recordLesson, recordTrail } from "@/lib/progress";
-import { MODE_STYLE, type Mode } from "@/components/ui/ModeBadge";
+import { useI18n } from "../i18n/client";
+import { recordLesson, recordTrail } from "../progress";
+import { MODE_STYLE, type Mode } from "../ui/ModeBadge";
 
 /** Wraps lesson content and lets the learner highlight one reasoning mode. */
 export function LensArticle({ children }: { children: React.ReactNode }) {

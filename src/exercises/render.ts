@@ -1,18 +1,22 @@
 import "server-only";
-import type { Locale } from "@/i18n/config";
-import type { RenderedExercise } from "@/components/exercises/types";
-import { getExercises, getLesson } from "./content";
-import type { Exercise } from "./schema";
-import { mdInline, mdToHtml } from "./markdown";
+import type { z } from "zod";
+import type { Exercise, ExerciseBase } from "../schema";
+import { mdInline, mdToHtml } from "../markdown/markdown";
+import type { RenderedExercise, RenderedExerciseBase } from "./types";
 
-export function renderExercises(slug: string, locale: Locale): RenderedExercise[] {
-  return renderExerciseList(getExercises(slug, locale).exercises, slug, getLesson(slug, locale).frontmatter.title);
-}
+/**
+ * Renders an exercise of a type a site adds (Scientia's `python`): given the exercise and its rendered
+ * common fields, return the full rendered exercise, or `undefined` if the type is unknown.
+ */
+export type RenderExtraExercise = (exercise: { type: string } & Record<string, unknown>, base: RenderedExerciseBase) => RenderedExercise | undefined;
 
-/** Exercises with their markdown and maths rendered to HTML, for the client components. */
-export function renderExerciseList(exercises: Exercise[], slug: string, lessonTitle: string): RenderedExercise[] {
-  return exercises.map((ex) => {
-    const base = {
+/** Any validated exercise: the core's types, or a site's own built on `ExerciseBase`. */
+export type ExerciseLike = z.infer<typeof ExerciseBase> & { type: string };
+
+/** Exercises with their markdown and maths rendered to HTML, for the client components. Server-only. */
+export function renderExerciseList(exercises: readonly ExerciseLike[], slug: string, lessonTitle: string, renderExtra?: RenderExtraExercise): RenderedExercise[] {
+  return (exercises as readonly Exercise[]).map((ex) => {
+    const base: RenderedExerciseBase = {
       id: ex.id,
       lesson: slug,
       lessonTitle,
@@ -29,10 +33,14 @@ export function renderExerciseList(exercises: Exercise[], slug: string, lessonTi
         return { ...base, type: "integer", answer: ex.answer, feedback: ex.feedback.map((f) => ({ match: f.match, html: mdInline(f.message) })) };
       case "set":
         return { ...base, type: "set", answer: ex.answer, feedback: ex.feedback.map((f) => ({ match: f.match, html: mdInline(f.message) })) };
-      case "python":
-        return { ...base, type: "python", starter: ex.starter, tests: ex.tests };
       case "text":
         return { ...base, type: "text", answers: ex.answers, ...(ex.lang ? { lang: ex.lang } : {}), feedback: ex.feedback.map((f) => ({ match: f.match, html: mdInline(f.message) })) };
+      default: {
+        const other = ex as { type: string } & Record<string, unknown>;
+        const rendered = renderExtra?.(other, base);
+        if (!rendered) throw new Error(`exercise ${base.id} in ${slug}: no renderer for type "${other.type}"`);
+        return rendered;
+      }
     }
   });
 }

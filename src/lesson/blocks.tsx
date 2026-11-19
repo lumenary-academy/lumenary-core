@@ -1,13 +1,19 @@
 import { ChevronDown, Heart, Users } from "lucide-react";
-import type { TFunction } from "@/i18n/dictionary";
-import { NarratorAvatar, type NarratorId } from "@/components/brand/Narrators";
-import { ModeBadge } from "@/components/ui/ModeBadge";
-import { mdInline } from "@/lib/markdown";
+import type { TFunction } from "../i18n/translate";
+import { makeNarrator } from "../cats/Narrator";
+import { ModeBadge } from "../ui/ModeBadge";
+import { mdInline } from "../markdown/markdown";
 import { LENSES, SECTION_KINDS, type Lens, type SectionKind } from "./kinds";
 
 type P = { children?: React.ReactNode };
 
-export function makeBlocks(t: TFunction) {
+/**
+ * The lesson blocks every Lumenary lesson may use (`<Section>`, `<Definition>`, `<Example>`, `<Note>`,
+ * `<Misconception>`, `<Analogy>`, `<Figure>`, `<Reflection>`, …), with their labels in the page's
+ * language. `<Narrator>` is Lumenary Scientia's cat guides, labelled with their roles in the guide set
+ * `guides` (default: Lumenary Math's; see `guideLabel`); a site without them leaves it out.
+ */
+export function makeBlocks(t: TFunction, { guides }: { guides?: string } = {}) {
   function Section({ id, kind, title, children }: P & { id: string; kind: SectionKind; title: string }) {
     const meta = SECTION_KINDS[kind] ?? SECTION_KINDS.human;
     const { Icon } = meta;
@@ -26,26 +32,7 @@ export function makeBlocks(t: TFunction) {
     );
   }
 
-  const NARRATOR_MODE = { chloe: "H", margaret: "C", gideon: "F" } as const;
-  const NARRATOR_BG = { chloe: "bg-human-soft", margaret: "bg-compute-soft", gideon: "bg-formal-soft" } as const;
-  const NARRATOR_FG = { chloe: "text-human", margaret: "text-compute", gideon: "text-formal" } as const;
-
-  function Narrator({ who, children }: P & { who: NarratorId }) {
-    return (
-      <aside className="!mt-7 flex items-start gap-3.5" data-mode={NARRATOR_MODE[who]}>
-        <span data-cat className="mt-1 shrink-0">
-          <NarratorAvatar who={who} size={46} />
-        </span>
-        <div className={`relative min-w-0 flex-1 rounded-2xl rounded-ss-md px-4 py-3 font-sans text-[0.98rem] leading-relaxed text-ink ${NARRATOR_BG[who]}`}>
-          <p className={`text-xs font-bold ${NARRATOR_FG[who]}`}>
-            <span data-cat>{t(`narrators.${who}`)} · </span>
-            <span>{t(`narrators.${who}Role`)}</span>
-          </p>
-          <div className="mt-1 [&>p]:m-0 [&>p+p]:mt-2">{children}</div>
-        </div>
-      </aside>
-    );
-  }
+  const Narrator = makeNarrator(t, guides);
 
   function Box({ label, tone, children, title }: P & { label: string; tone: string; title?: string }) {
     return (

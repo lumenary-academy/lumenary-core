@@ -1,5 +1,5 @@
 import { AlertTriangle, AudioLines, Atom, Binary, BookOpen, Boxes, Compass, Cpu, Dices, Donut, Eye, Feather, Globe2, Grid3x3, Hash, Infinity as InfinityIcon, Languages, Library, Lightbulb, MessagesSquare, Landmark, SpellCheck, MousePointerClick, Network, PencilLine, PencilRuler, ShieldCheck, Sparkles, Terminal, Triangle, Variable } from "lucide-react";
-import type { Mode } from "@/components/ui/ModeBadge";
+import type { Mode } from "../ui/ModeBadge";
 
 export const SECTION_KINDS = {
   motivation: { mode: "H", Icon: Compass },

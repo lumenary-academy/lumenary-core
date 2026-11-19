@@ -1,0 +1,86 @@
+{
+  "name": "@lumenary/core",
+  "version": "0.1.0",
+  "description": "The shared core of the Lumenary Academy sites: design tokens, brand, site chrome, i18n, MDX lessons, courses, exercises and progress.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lumenary-academy/lumenary-core.git"
+  },
+  "homepage": "https://lumenary.academy",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "sideEffects": [
+    "*.css",
+    "./src/katex.ts"
+  ],
+  "files": [
+    "src",
+    "LICENSE",
+    "README.md"
+  ],
+  "exports": {
+    "./styles.css": "./src/styles.css",
+    "./brand": "./src/brand/index.ts",
+    "./cats": "./src/cats/index.ts",
+    "./code": "./src/code/index.ts",
+    "./course": "./src/course/index.ts",
+    "./exercises": "./src/exercises/index.ts",
+    "./exercises/render": "./src/exercises/render.ts",
+    "./fonts": "./src/fonts.ts",
+    "./i18n": "./src/i18n/index.ts",
+    "./i18n/client": "./src/i18n/client.tsx",
+    "./i18n/server": "./src/i18n/server.tsx",
+    "./i18n/messages/*": "./src/i18n/messages/*",
+    "./katex": "./src/katex.ts",
+    "./lesson": "./src/lesson/index.ts",
+    "./lesson/client": "./src/lesson/client.ts",
+    "./markdown": "./src/markdown/index.ts",
+    "./pages": "./src/pages/index.ts",
+    "./progress": "./src/progress.ts",
+    "./routing": "./src/routing.ts",
+    "./schema": "./src/schema.ts",
+    "./site": "./src/site/index.ts",
+    "./ui": "./src/ui/index.ts",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "peerDependencies": {
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "dependencies": {
+    "@mdx-js/mdx": "3.1.1",
+    "gray-matter": "4.0.3",
+    "hast-util-to-html": "9.0.5",
+    "katex": "0.16.47",
+    "lucide-react": "1.62.0",
+    "rehype-katex": "7.0.1",
+    "rehype-stringify": "10.0.1",
+    "remark-gfm": "4.0.1",
+    "remark-math": "6.0.0",
+    "remark-parse": "11.0.0",
+    "remark-rehype": "11.1.2",
+    "server-only": "0.0.1",
+    "shiki": "4.5.0",
+    "unified": "11.0.5",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "typescript": "5.9.3",
+    "vitest": "5.0.5"
+  }
+}

@@ -1,34 +1,67 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Check, Clock, ExternalLink } from "lucide-react";
-import { LOCALE_META, type Locale } from "@/i18n/config";
-import { Messages } from "@/i18n/Messages";
-import { getT } from "@/i18n/server";
-import { getTopic } from "@/lib/content";
-import { COLLECTIONS, getCourseExercises, getCourseLesson, lessonCodeStatus, type LoadedCourse } from "@/lib/courses";
-import { renderExerciseList } from "@/lib/exercises";
-import { href } from "@/lib/href";
-import { mdInline, mdToHtml } from "@/lib/markdown";
-import { linksToUnpublished, unlinkUnpublished } from "@/lib/subjects";
-import { extractToc, renderMdx } from "@/lib/mdx";
-import { widgetMessageNamespaces } from "@/lib/widget-messages";
-import { makeMdxComponents } from "@/components/lesson/mdx-components";
-import { Toc } from "@/components/lesson/LessonChrome";
-import { VerificationBadge } from "@/components/ui/Badges";
-import { NarratorAvatar } from "@/components/brand/Narrators";
-import { CatToggle } from "@/components/site/CatToggle";
-import { CodeBlock } from "./CodeBlock";
-import { Say } from "./Say";
+import { LOCALE_META, type Locale } from "../i18n/config";
+import type { TFunction } from "../i18n/translate";
+import type { SiteI18n } from "../i18n/server";
+import type { Routing } from "../routing";
+import type { Exercise } from "../schema";
+import { renderExerciseList, type RenderExtraExercise } from "../exercises/render";
+import { mdInline, mdToHtml } from "../markdown/markdown";
+import { extractToc, renderMdx, type MdxComponents } from "../markdown/mdx";
+import { makeLessonComponents } from "../lesson/components";
+import type { ExerciseCardComponent } from "../lesson/Exercises";
+import { Toc } from "../lesson/LessonChrome";
+import { VerificationBadge } from "../ui/Badges";
+import { NarratorAvatar } from "../cats/Narrators";
+import { CatToggle } from "../cats/CatToggle";
+import { CodeBlock } from "../code/CodeBlock";
+import type { CourseLoader, LoadedCourse } from "./loader";
 
-const lessonHref = (locale: string, c: LoadedCourse, slug: string) => href(locale, `${c.path}/${slug}`);
-
-/** Where a course sits: courses nested in a subject (Lumenary CS's languages and electives) link back to their index. */
-function parentOf(c: LoadedCourse, locale: string): { href: string; label: string } | null {
-  return c.collection ? { href: href(locale, c.collection), label: COLLECTIONS[c.collection].label } : null;
+/**
+ * Everything the course pages need from the site that renders them. The site builds it once, in a
+ * server-only module, from its course loader, its i18n and its routing; the hooks are where a site's
+ * own subjects plug in (Lumenary Scientia: Lumenary CS's collections, Lumenary Math topics, Python).
+ */
+export interface CourseSite<E = Exercise> {
+  courses: CourseLoader<E>;
+  i18n: SiteI18n;
+  routing: Routing;
+  /**
+   * The parent page of a nested course (Lumenary CS's programming languages and electives): the breadcrumb
+   * link, and the eyebrow above the course title. Without one, the eyebrow is the division's name.
+   */
+  parentOf?: (c: LoadedCourse, locale: Locale) => { href: string; label: string; eyebrow: string } | null;
+  /** The cat guides: a lesson's frontmatter `narrators` and `<Narrator>` (default true; Lumenary Lingua has none). */
+  cats?: boolean;
+  /**
+   * The cat guides' set of role labels for a course (`narrators.sets.<set>.*`, e.g. "cs" or "ee"); without
+   * one, or for a course it returns nothing for, Lumenary Math's default labels.
+   */
+  guides?: (c: LoadedCourse) => string | undefined;
+  /** The site's own MDX components for a lesson (links, widgets, a runnable code block…), laid over the core's. */
+  components?: (ctx: { c: LoadedCourse; slug: string; locale: Locale; t: TFunction }) => MdxComponents;
+  /** A card for exercise types the site adds, and how to render them (Lumenary Scientia: Python). */
+  ExerciseCard?: ExerciseCardComponent;
+  renderExercise?: RenderExtraExercise;
+  /** A lesson's tested code, from the site's report, for the "code tested" badge. */
+  codeStatus?: (c: LoadedCourse, slug: string) => { tested: boolean; count: number } | null;
+  /** Links shown beside a lesson's prerequisites for its frontmatter `related` ids (Lumenary Math topics). */
+  related?: (ids: string[], locale: Locale) => { key: string; href: string; title: string }[];
+  /** Rewrites a course's rendered description and subtitle (Scientia: links into unpublished subjects become text). */
+  rewriteHtml?: (html: string) => string;
+  /** Message namespaces the lesson's client components need beyond the core's (Scientia: "python" and widget strings). */
+  messageNamespaces?: (body: string) => string[];
 }
 
+const DIVISION_NAME = { scientia: "Lumenary Scientia", lingua: "Lumenary Lingua" } as const;
+
+const lessonHref = (site: { routing: Routing }, locale: string, c: LoadedCourse, slug: string) => site.routing.href(locale, `${c.path}/${slug}`);
+
 /** A course's front page: its description, anything the subject adds (`extra`), and every level with its lessons. */
-export async function CourseOverview({ c, locale, extra }: { c: LoadedCourse; locale: Locale; extra?: React.ReactNode }) {
-  const parent = parentOf(c, locale);
+export async function CourseOverview<E>({ c, locale, extra, site }: { c: LoadedCourse; locale: Locale; extra?: React.ReactNode; site: CourseSite<E> }) {
+  const parent = site.parentOf?.(c, locale) ?? null;
+  const rewrite = site.rewriteHtml ?? ((html: string) => html);
+  const { getCourseLesson } = site.courses;
   const { course } = c;
   let n = 0;
   return (
@@ -39,19 +72,17 @@ export async function CourseOverview({ c, locale, extra }: { c: LoadedCourse; lo
           <p className="eyebrow">
             {parent ? (
               <Link href={parent.href} className="hover:underline">
-                Lumenary CS · {parent.label}
+                {parent.eyebrow}
               </Link>
-            ) : course.division === "lingua" ? (
-              "Lumenary Lingua"
             ) : (
-              "Lumenary Scientia"
+              DIVISION_NAME[course.division]
             )}
           </p>
           <h1 className="mt-4 text-4xl font-semibold leading-[1.08] text-ink sm:text-[3.4rem]">{course.title}</h1>
-          <p className="mt-4 max-w-3xl font-serif text-xl leading-relaxed text-ink-2" dangerouslySetInnerHTML={{ __html: unlinkUnpublished(mdInline(course.subtitle)) }} />
+          <p className="mt-4 max-w-3xl font-serif text-xl leading-relaxed text-ink-2" dangerouslySetInnerHTML={{ __html: rewrite(mdInline(course.subtitle)) }} />
           <div className="prose-lumen mt-6 max-w-3xl text-ink-2">
             {course.description.map((p, i) => (
-              <div key={i} dangerouslySetInnerHTML={{ __html: unlinkUnpublished(mdToHtml(p)) }} />
+              <div key={i} dangerouslySetInnerHTML={{ __html: rewrite(mdToHtml(p)) }} />
             ))}
           </div>
           <div className="mt-6 flex flex-wrap gap-2">
@@ -84,7 +115,7 @@ export async function CourseOverview({ c, locale, extra }: { c: LoadedCourse; lo
                 n += 1;
                 return (
                   <li key={slug}>
-                    <Link prefetch={false} href={lessonHref(locale, c, slug)} className="card group flex h-full gap-4 p-4 hover:shadow-[var(--shadow-lg)]">
+                    <Link prefetch={false} href={lessonHref(site, locale, c, slug)} className="card group flex h-full gap-4 p-4 hover:shadow-[var(--shadow-lg)]">
                       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-paper-2 text-sm font-bold text-muted group-hover:bg-gold group-hover:text-[#1b1406]">{n}</span>
                       <span className="min-w-0">
                         <span className="block font-display text-lg font-semibold leading-snug text-ink">{fm.title}</span>
@@ -138,33 +169,27 @@ function References({ refs }: { refs: LoadedCourse["course"]["references"] }) {
 }
 
 /** One lesson of a course: header, objectives, the MDX body with its exercises, references, and the way on. */
-export async function CourseLessonPage({ c, slug, locale }: { c: LoadedCourse; slug: string; locale: Locale }) {
+export async function CourseLessonPage<E>({ c, slug, locale, site }: { c: LoadedCourse; slug: string; locale: Locale; site: CourseSite<E> }) {
   const { course } = c;
-  const t = await getT(locale);
+  const { getCourseLesson, getCourseExercises } = site.courses;
+  const href = site.routing.href;
+  const t = await site.i18n.getT(locale);
+  const cats = site.cats ?? true;
   const lesson = getCourseLesson(c, slug);
   const fm = lesson.frontmatter;
-  const exercises = renderExerciseList(getCourseExercises(c, slug), slug, fm.title);
-  const components = {
-    ...makeMdxComponents({ locale, t, exercises }),
+  const exercises = renderExerciseList(getCourseExercises(c, slug) as never, slug, fm.title, site.renderExercise);
+  const components: MdxComponents = {
+    ...makeLessonComponents({ t, exercises, ExerciseCard: site.ExerciseCard, cats, guides: site.guides?.(c) }),
     pre: CodeBlock,
-    Say,
-    // A link into a subject that is not published yet (Robotics before its release) is plain text until it is.
-    a: ({ href: to, children, ...props }: React.ComponentProps<"a">) =>
-      linksToUnpublished(to) ? (
-        <>{children}</>
-      ) : (
-        <a href={to} {...props}>
-          {children}
-        </a>
-      ),
     LessonLink: ({ slug: to, children }: { slug: string; children?: React.ReactNode }) => {
       if (!c.slugs.includes(to)) throw new Error(`<LessonLink slug="${to}">: no such lesson in ${c.dir}`);
       return (
-        <Link prefetch={false} href={lessonHref(locale, c, to)} className="underline decoration-gold/60 underline-offset-2 hover:decoration-gold">
+        <Link prefetch={false} href={lessonHref(site, locale, c, to)} className="underline decoration-gold/60 underline-offset-2 hover:decoration-gold">
           {children ?? getCourseLesson(c, to).frontmatter.title}
         </Link>
       );
     },
+    ...site.components?.({ c, slug, locale, t }),
   };
   const content = await renderMdx(lesson.body, components);
   const toc = extractToc(lesson.body);
@@ -172,13 +197,15 @@ export async function CourseLessonPage({ c, slug, locale }: { c: LoadedCourse; s
   const prev = c.slugs[index - 1];
   const next = c.slugs[index + 1];
   const levelIndex = lesson.level.lessons.indexOf(slug);
-  const code = lessonCodeStatus(c, slug);
-  const related = fm.related.map((id) => getTopic(id)).filter((x) => x !== undefined);
+  const code = site.codeStatus?.(c, slug) ?? null;
+  const related = site.related?.(fm.related, locale) ?? [];
+  const narrators = cats ? fm.narrators : [];
   const ui = course.ui;
-  const parent = parentOf(c, locale);
+  const parent = site.parentOf?.(c, locale) ?? null;
+  const { Messages } = site.i18n;
 
   return (
-    <Messages locale={locale} ns={["exercise", "python", "lesson", "lingua", ...widgetMessageNamespaces(lesson.body)]}>
+    <Messages locale={locale} ns={["exercise", "lesson", "lingua", ...(site.messageNamespaces?.(lesson.body) ?? [])]}>
       <div lang={course.locale} dir={LOCALE_META[course.locale].dir}>
         <header className="relative overflow-hidden border-b border-line">
           <div className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_top_right,black,transparent_65%)]" aria-hidden="true" />
@@ -219,15 +246,15 @@ export async function CourseLessonPage({ c, slug, locale }: { c: LoadedCourse; s
                   <VerificationBadge label="ai-drafted" text={ui.aiDrafted} />
                   <VerificationBadge label="awaiting" text={ui.awaitingReview} />
                 </div>
-                {fm.narrators.length > 0 && (
+                {narrators.length > 0 && (
                   <div data-cat className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1">
                     <div className="flex -space-x-2 rtl:space-x-reverse">
-                      {fm.narrators.map((n) => (
+                      {narrators.map((n) => (
                         <NarratorAvatar key={n} who={n} size={36} className="rounded-full ring-2 ring-paper" />
                       ))}
                     </div>
                     <p className="text-sm text-muted">
-                      {t("lesson.narrators")}: {fm.narrators.map((n) => t(`narrators.${n}`)).join(", ")}
+                      {t("lesson.narrators")}: {narrators.map((n) => t(`narrators.${n}`)).join(", ")}
                     </p>
                     <span className="no-print">
                       <CatToggle variant="text" />
@@ -252,15 +279,15 @@ export async function CourseLessonPage({ c, slug, locale }: { c: LoadedCourse; s
                   <ul className="mt-2 flex flex-wrap gap-1.5">
                     {fm.prerequisites.map((p) => (
                       <li key={p}>
-                        <Link prefetch={false} href={lessonHref(locale, c, p)} className="chip hover:border-line-2 hover:text-ink">
+                        <Link prefetch={false} href={lessonHref(site, locale, c, p)} className="chip hover:border-line-2 hover:text-ink">
                           {getCourseLesson(c, p).frontmatter.title}
                         </Link>
                       </li>
                     ))}
-                    {related.map((topic) => (
-                      <li key={topic.id}>
-                        <Link prefetch={false} href={topic.lesson ? href(locale, `math/lessons/${topic.lesson}`) : href(locale, `math/topics/${topic.id}`)} className="chip border-gold/50 bg-gold-soft text-gold-ink hover:border-gold">
-                          {topic.title}
+                    {related.map((r) => (
+                      <li key={r.key}>
+                        <Link prefetch={false} href={r.href} className="chip border-gold/50 bg-gold-soft text-gold-ink hover:border-gold">
+                          {r.title}
                         </Link>
                       </li>
                     ))}
@@ -283,7 +310,7 @@ export async function CourseLessonPage({ c, slug, locale }: { c: LoadedCourse; s
                       <li key={s}>
                         <Link
                           prefetch={false}
-                          href={lessonHref(locale, c, s)}
+                          href={lessonHref(site, locale, c, s)}
                           aria-current={current ? "page" : undefined}
                           className={`flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm ${current ? "bg-ink text-paper" : "text-ink-2 hover:bg-paper-2"}`}
                         >
@@ -311,7 +338,7 @@ export async function CourseLessonPage({ c, slug, locale }: { c: LoadedCourse; s
             )}
             <nav className="no-print mt-12 grid gap-3 border-t border-line pt-8 sm:grid-cols-2" aria-label={ui.lessons}>
               {prev ? (
-                <Link prefetch={false} href={lessonHref(locale, c, prev)} className="card group flex items-center gap-3 p-4 hover:shadow-[var(--shadow-lg)]">
+                <Link prefetch={false} href={lessonHref(site, locale, c, prev)} className="card group flex items-center gap-3 p-4 hover:shadow-[var(--shadow-lg)]">
                   <ArrowLeft size={18} className="text-muted transition-transform group-hover:-translate-x-0.5 rtl:rotate-180" aria-hidden="true" />
                   <span>
                     <span className="block text-xs text-muted">{ui.previous}</span>
@@ -322,7 +349,7 @@ export async function CourseLessonPage({ c, slug, locale }: { c: LoadedCourse; s
                 <span />
               )}
               {next ? (
-                <Link prefetch={false} href={lessonHref(locale, c, next)} className="card group flex items-center justify-end gap-3 p-4 text-end hover:shadow-[var(--shadow-lg)]">
+                <Link prefetch={false} href={lessonHref(site, locale, c, next)} className="card group flex items-center justify-end gap-3 p-4 text-end hover:shadow-[var(--shadow-lg)]">
                   <span>
                     <span className="block text-xs text-muted">{ui.next}</span>
                     <span className="font-display text-lg font-semibold text-ink">{getCourseLesson(c, next).frontmatter.title}</span>

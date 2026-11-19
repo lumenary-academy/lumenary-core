@@ -2,8 +2,8 @@
 
 import { Cat } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useI18n } from "@/i18n/client";
-import { CATS_KEY as KEY } from "./init-scripts";
+import { useI18n } from "../i18n/client";
+import { CATS_KEY as KEY } from "../site/init-scripts";
 
 /**
  * Shows or hides the three cat guides (their portraits and names) everywhere on the site. They are

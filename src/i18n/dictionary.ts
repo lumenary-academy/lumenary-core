@@ -1,15 +1,21 @@
 import en from "./messages/en.json";
 import type { Locale } from "./config";
+import type { Json, Messages } from "./translate";
 
-export type Messages = typeof en;
-type Json = string | { [key: string]: Json };
+export { makeT, translate, type Json, type Messages, type TFunction } from "./translate";
+
+/** Loads one locale's catalogue, e.g. `() => import("./messages/es.json")`. */
+export type MessageLoader = () => Promise<{ default: unknown }>;
 
 /**
- * Message catalogues. Missing keys in a locale fall back, key by key, to the
- * canonical English source — a partially translated locale still renders.
+ * The UI strings every Lumenary site shares (src/i18n/messages/<locale>.json): the header and
+ * footer, the theme and language menus, lesson blocks and sections, exercises, the cat guides.
+ * A site adds its own strings with `createMessages` (or `createI18n` in `@lumenary/core/i18n/server`).
  */
-const loaders: Record<Locale, () => Promise<{ default: unknown }>> = {
-  en: () => import("./messages/en.json"),
+export const CORE_MESSAGES: Messages = en;
+
+const coreLoaders: Record<Locale, MessageLoader> = {
+  en: async () => ({ default: en }),
   es: () => import("./messages/es.json"),
   ar: () => import("./messages/ar.json"),
   hi: () => import("./messages/hi.json"),
@@ -17,7 +23,11 @@ const loaders: Record<Locale, () => Promise<{ default: unknown }>> = {
   sw: () => import("./messages/sw.json"),
 };
 
-function deepMerge(base: Json, over: Json | undefined): Json {
+/**
+ * `over` laid onto `base`, key by key, keeping only the keys `base` has: missing keys in a locale
+ * fall back to the canonical English source, so a partially translated locale still renders.
+ */
+export function deepMerge(base: Json, over: Json | undefined): Json {
   if (over === undefined) return base;
   if (typeof base === "string" || typeof over === "string") return typeof over === "string" ? over : base;
   const out: { [key: string]: Json } = {};
@@ -25,53 +35,67 @@ function deepMerge(base: Json, over: Json | undefined): Json {
   return out;
 }
 
-export async function getMessages(locale: Locale): Promise<Messages> {
-  if (locale === "en") return en;
-  try {
-    const mod = await loaders[locale]();
-    return deepMerge(en as Json, mod.default as Json) as Messages;
-  } catch {
-    return en;
+/** Two catalogues joined: every key of either, `b` winning where both have one (a site's strings over the core's). */
+export function combine(a: Messages, b: Messages): Messages {
+  const out: Messages = { ...a };
+  for (const [key, value] of Object.entries(b)) {
+    const prev = out[key];
+    out[key] = prev && typeof prev === "object" && typeof value === "object" ? combine(prev, value) : value;
   }
+  return out;
 }
 
-/** Look up a dotted key and interpolate `{name}` placeholders. */
-export function translate(messages: Messages, key: string, vars?: Record<string, string | number>): string {
-  let node: unknown = messages;
-  for (const part of key.split(".")) {
-    if (node && typeof node === "object" && part in (node as object)) node = (node as Record<string, unknown>)[part];
-    else {
-      node = undefined;
-      break;
+export interface SiteMessages {
+  /** The site's own English strings (the canonical source). */
+  en?: Messages;
+  /** Loaders for the site's other locales; a missing locale falls back to English. */
+  locales?: Partial<Record<Locale, MessageLoader>>;
+}
+
+/**
+ * A `getMessages(locale)` for a site: the shared strings and the site's own, in English, overlaid key
+ * by key with the locale's translations of both. Results are cached per locale.
+ */
+export function createMessages(site: SiteMessages = {}): (locale: Locale) => Promise<Messages> {
+  const english = combine(en, site.en ?? {});
+  const cache = new Map<Locale, Promise<Messages>>();
+  const load = async (loader: MessageLoader | undefined): Promise<Messages> => {
+    if (!loader) return {};
+    try {
+      return ((await loader()).default ?? {}) as Messages;
+    } catch {
+      return {};
     }
-  }
-  let text = typeof node === "string" ? node : key;
-  if (vars) for (const [k, v] of Object.entries(vars)) text = text.replaceAll(`{${k}}`, String(v));
-  return text;
+  };
+  return (locale) => {
+    if (locale === "en") return Promise.resolve(english);
+    if (!cache.has(locale))
+      cache.set(
+        locale,
+        Promise.all([load(coreLoaders[locale]), load(site.locales?.[locale])]).then(([core, own]) => deepMerge(english, combine(core, own)) as Messages),
+      );
+    return cache.get(locale)!;
+  };
 }
 
-export type TFunction = (key: string, vars?: Record<string, string | number>) => string;
-
-export function makeT(messages: Messages): TFunction {
-  return (key, vars) => translate(messages, key, vars);
-}
+/** The shared strings alone, for a site with none of its own. */
+export const getMessages = createMessages();
 
 /** Namespaces every page's client components need (header, language menu, theme). */
 export const CORE_NAMESPACES = ["meta", "nav", "theme", "cats", "language", "modes", "common", "levels", "status"] as const;
 
 /** A subset of the catalogue, so each page only ships the strings its client components use. */
 export function pickMessages(messages: Messages, namespaces: readonly string[]): Partial<Messages> {
-  const out: Record<string, unknown> = {};
-  const all = messages as Record<string, unknown>;
+  const out: Record<string, Json> = {};
   for (const ns of namespaces) {
     // "w.fractions" picks one sub-namespace, so pages ship only the widget strings they use.
     const [top, sub] = ns.split(".", 2);
-    if (!(top in all)) continue;
-    if (sub === undefined) out[top] = all[top];
+    if (!(top in messages)) continue;
+    if (sub === undefined) out[top] = messages[top];
     else {
-      const node = all[top] as Record<string, unknown>;
-      if (node && sub in node) out[top] = { ...((out[top] as Record<string, unknown>) ?? {}), [sub]: node[sub] };
+      const node = messages[top];
+      if (node && typeof node === "object" && sub in node) out[top] = { ...((out[top] as Record<string, Json>) ?? {}), [sub]: node[sub] };
     }
   }
-  return out as Partial<Messages>;
+  return out;
 }

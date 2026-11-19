@@ -1,0 +1,203 @@
+{
+  "meta": {
+    "siteName": "Lumenary Academy",
+    "tagline": "Todas las ciencias. Muchas lenguas. Todas las naciones.",
+    "description": "Lumenary Academy: cursos gratuitos y de código abierto de matemáticas, informática, ingeniería y ciencias, cursos de idiomas y preparación de exámenes."
+  },
+  "nav": {
+    "skip": "Saltar al contenido",
+    "menu": "Menú",
+    "close": "Cerrar",
+    "home": "Inicio",
+    "about": "Acerca de",
+    "short": {
+      "about": "Nosotros"
+    }
+  },
+  "theme": {
+    "label": "Tema de color",
+    "system": "Sistema",
+    "light": "Claro",
+    "dark": "Oscuro"
+  },
+  "cats": {
+    "label": "Gatos guía",
+    "show": "Mostrar los gatos guía",
+    "hide": "Ocultar los gatos guía"
+  },
+  "language": {
+    "label": "Idioma",
+    "choose": "Elige un idioma",
+    "demoNote": "Seis idiomas de demostración. Las traducciones distintas del inglés son borradores generados automáticamente que esperan revisión humana.",
+    "allLanguages": "Ver todos los idiomas y su estado",
+    "status": {
+      "canonical": "Fuente canónica",
+      "machine-draft": "Borrador automático · sin revisar",
+      "human-reviewed": "Revisado por personas",
+      "math-reviewed": "Revisado matemáticamente",
+      "incomplete": "Incompleto"
+    },
+    "fallbackNotice": "Esta página todavía no está disponible en {language}, por eso se muestra en {fallback}.",
+    "draftNotice": "Esta es una traducción en borrador generada automáticamente. Todavía no la ha revisado ninguna persona ni ningún matemático.",
+    "staleNotice": "El original ha cambiado desde que se hizo esta traducción; puede estar desactualizada.",
+    "helpTranslate": "Ayuda a traducir"
+  },
+  "modes": {
+    "H": "Humano",
+    "F": "Formal",
+    "C": "Computacional",
+    "all": "Todos los modos",
+    "lens": "Lente",
+    "lensHelp": "Resalta un modo de razonamiento"
+  },
+  "common": {
+    "learnMore": "Más información",
+    "back": "Volver",
+    "open": "Abrir",
+    "comingSoon": "Planificado",
+    "optional": "Opcional",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "yes": "Sí",
+    "no": "No",
+    "loading": "Cargando…"
+  },
+  "sections": {
+    "motivation": "Motivación",
+    "intuition": "Intuición",
+    "definitions": "Definiciones",
+    "examples": "Ejemplos resueltos",
+    "human": "Explicación",
+    "proof": "Demostración",
+    "formal": "Matemática formal",
+    "computation": "Cálculo",
+    "visualization": "Explorar",
+    "exercises": "Ejercicios",
+    "misconceptions": "Errores frecuentes",
+    "trails": "Senderos del Asombro",
+    "sets": "Conexión con la teoría de conjuntos",
+    "categories": "Conexión con la teoría de categorías",
+    "history": "Historia y contexto mundial",
+    "reading": "Lecturas complementarias",
+    "reflection": "Reflexión opcional",
+    "viewpoints": "Puntos de vista",
+    "vocabulary": "Vocabulario",
+    "grammar": "Gramática",
+    "dialogue": "Diálogo",
+    "pronunciation": "Pronunciación",
+    "culture": "Cultura"
+  },
+  "blocks": {
+    "definition": "Definición",
+    "theorem": "Teorema",
+    "proof": "Demostración",
+    "example": "Ejemplo",
+    "misconception": "Idea errónea",
+    "note": "Nota",
+    "reflection": "Reflexión cristiana opcional",
+    "reflectionNote": "Una reflexión de la tradición cristiana que inspira Lumenary Academy. No forma parte de las matemáticas y puedes omitirla con toda libertad.",
+    "showReflection": "Leer la reflexión",
+    "hideReflection": "Ocultar",
+    "analogy": "Analogía, no una construcción formal",
+    "forGrownUps": "Para adultos",
+    "qed": "∎"
+  },
+  "lenses": {
+    "sets": "Teoría de conjuntos",
+    "categories": "Teoría de categorías",
+    "topology": "Topología",
+    "geometry": "Geometría",
+    "analysis": "Análisis",
+    "algebra": "Álgebra",
+    "number-theory": "Teoría de números",
+    "combinatorics": "Combinatoria",
+    "probability": "Probabilidad",
+    "logic": "Lógica",
+    "computation": "Computación",
+    "physics": "Física"
+  },
+  "narrators": {
+    "chloe": "Chloe",
+    "chloeRole": "La matemática",
+    "chloeQ": "¿Por qué es verdad esto?",
+    "margaret": "Margaret",
+    "margaretRole": "La calculista",
+    "margaretQ": "¿Qué pasa si lo calculamos?",
+    "gideon": "Gideon",
+    "gideonRole": "El formalista",
+    "gideonQ": "¿Podemos demostrarlo con precisión?"
+  },
+  "lesson": {
+    "objectives": "Aprenderás a",
+    "prerequisites": "Se basa en",
+    "noPrerequisites": "Sin requisitos previos: ¡empieza aquí!",
+    "minutes": "{n} min",
+    "contents": "En esta página",
+    "next": "Lección siguiente",
+    "previous": "Lección anterior",
+    "sequence": "Secuencia de lecciones",
+    "inThisLesson": "En esta lección",
+    "narrators": "Tus guías",
+    "translation": "Traducción"
+  },
+  "exercise": {
+    "check": "Comprobar",
+    "tryAgain": "Intentar de nuevo",
+    "hint": "Mostrar una pista",
+    "nextHint": "Otra pista",
+    "hintN": "Pista {n} de {total}",
+    "solution": "Mostrar la solución desarrollada",
+    "hideSolution": "Ocultar la solución",
+    "correct": "Sí, ¡es correcto!",
+    "notYet": "Todavía no. Los errores son parte de aprender: vuelve a mirarlo.",
+    "answerPlaceholder": "Tu respuesta",
+    "setPlaceholder": "p. ej. {1, 2, 3}",
+    "setHelp": "Escribe los elementos separados por comas. El orden y las repeticiones no importan, ¡igual que en un conjunto!",
+    "integerPlaceholder": "Un número entero, p. ej. −4",
+    "parseError": "No he podido leer eso: revisa el formato e inténtalo de nuevo.",
+    "chooseOne": "Elige una opción",
+    "chooseAll": "Elige todas las que correspondan",
+    "difficulty": {
+      "warm-up": "Calentamiento",
+      "core": "Esencial",
+      "stretch": "Desafío"
+    },
+    "textPlaceholder": "Escribe tu respuesta",
+    "accents": "Casi: solo cambian las tildes. Revisa cada tilde y vuelve a intentarlo."
+  },
+  "trail": {
+    "revealHint": "Mostrar la pista {n}"
+  },
+  "lingua": {
+    "say": "Escuchar"
+  },
+  "footer": {
+    "mission": "Una academia de las ciencias y las lenguas, gratuita, de código abierto y de inspiración cristiana, que acoge a todo estudiante.",
+    "license": "Código: Apache-2.0 · Contenido: CC BY-SA 4.0",
+    "noEndorsement": "Un proyecto independiente. No implica el respaldo de ninguna institución.",
+    "openSource": "Código abierto",
+    "sourceCode": "Código fuente",
+    "codeLicence": "Licencia del código: Apache-2.0",
+    "contentLicence": "Licencia del contenido: CC BY-SA 4.0"
+  },
+  "divisions": {
+    "eyebrow": "Tres divisiones",
+    "lead": "Lumenary Scientia enseña las ciencias, libre y de código abierto para siempre. Lumenary Lingua enseña idiomas. Lumenary Prep prepara para exámenes, como servicio de pago.",
+    "available": "Disponible",
+    "pending": "Pendiente",
+    "scientiaWhat": "Las ciencias",
+    "scientiaBadge": "Gratis y de código abierto",
+    "scientiaText": "Sin cuentas, sin publicidad y sin niveles de pago, hoy y siempre. Cada materia va desde los primeros pasos hasta la frontera, en lecciones de primer borrador a la espera de revisión humana. Llegarán más ciencias, construidas de la misma manera.",
+    "scientiaCta": "Ver las materias",
+    "linguaWhat": "Idiomas",
+    "linguaText": "Cada idioma se enseña a través de uno que el estudiante ya conoce. Los dos primeros cursos están abiertos, del A1 al C2: español enseñado en inglés e inglés enseñado en español. Vendrán más pares, empezando por las lenguas más habladas del mundo.",
+    "linguaCta": "Ver los cursos de idiomas",
+    "prepWhat": "Preparación de exámenes",
+    "prepBadge": "De pago",
+    "prepText": "Cursos para exámenes de admisión, exámenes de inglés y exámenes profesionales, elaborados a partir de las fuentes oficiales de cada examen. Un precio por curso, pagado una sola vez, con acceso de por vida. Nunca hace falta pagar Prep para usar Scientia.",
+    "prepCta": "Visitar Lumenary Prep",
+    "more": "Más sobre las tres divisiones"
+  }
+}

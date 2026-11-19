@@ -1,5 +1,5 @@
 import { AlertTriangle, BadgeCheck, Bot, CircleDashed, FlaskConical, Languages, ShieldCheck, UserCheck } from "lucide-react";
-import type { VerificationLabel } from "@/lib/schema";
+import type { VerificationLabel } from "../schema";
 
 const STYLE: Record<VerificationLabel | "awaiting", { cls: string; Icon: typeof ShieldCheck }> = {
   "formally-verified": { cls: "bg-formal-soft text-formal border-formal/30", Icon: ShieldCheck },

@@ -1,5 +1,16 @@
-@import "tailwindcss";
-@import "katex/dist/katex.min.css";
+/* ==========================================================================
+   @lumenary/core/styles.css — Lumenary Academy's design system, shared by every Lumenary site.
+   A site's global stylesheet imports Tailwind first, then this file, and tells Tailwind to scan
+   the core's components:
+
+     @import "tailwindcss";
+     @import "@lumenary/core/styles.css";
+     @source "../../node_modules/@lumenary/core/src";
+
+   KaTeX's stylesheet is loaded by `import "@lumenary/core/katex"` in the locale layout, so that its
+   fonts resolve beside it wherever the core is installed (inlined here, their URLs would be rewritten
+   relative to the site's stylesheet).
+   ========================================================================== */
 
 /* ==========================================================================
    Lumenary Academy design system — tokens

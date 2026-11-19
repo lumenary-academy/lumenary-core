@@ -3,7 +3,7 @@
 import { createContext, useContext, useMemo } from "react";
 import type { Locale } from "./config";
 import { LOCALE_META } from "./config";
-import { makeT, type Messages, type TFunction } from "./dictionary";
+import { makeT, type Messages, type TFunction } from "./translate";
 
 interface I18nValue {
   locale: Locale;
