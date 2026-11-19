@@ -41,9 +41,12 @@ The sites depend on a tagged release:
 
 ```json
 "dependencies": {
-  "@lumenary/core": "github:lumenary-academy/lumenary-core#v0.1.0"
+  "@lumenary/core": "https://github.com/lumenary-academy/lumenary-core/archive/refs/tags/v0.1.0.tar.gz"
 }
 ```
+
+Use the release tarball rather than a `github:` dependency: npm records `github:` dependencies as `git+ssh` URLs in the lockfile, which fail on CI and Vercel without SSH keys, while the tarball installs over HTTPS with an integrity hash.
+
 
 For local work on the core and a site together, check them out side by side and link it instead:
 
@@ -180,7 +183,7 @@ The tests cover the parts that need no browser. A change to the components is ch
 
 1. Update `version` in `package.json` and commit.
 2. Tag the commit `vX.Y.Z` (for example `git tag v0.2.0`) and push the tag.
-3. In each site, change its dependency to the new tag (`github:lumenary-academy/lumenary-core#v0.2.0`), run `npm install`, and open a pull request; the site's CI builds it against the new core.
+3. In each site, change its dependency to the new release tarball (`https://github.com/lumenary-academy/lumenary-core/archive/refs/tags/v0.2.0.tar.gz`), run `npm install`, and open a pull request; the site's CI builds it against the new core.
 
 Releases follow semantic versioning: a change to an export's name or props, a CSS class or token, a message key or a `localStorage` key is a breaking change.
 
