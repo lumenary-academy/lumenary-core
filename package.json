@@ -1,6 +1,6 @@
 {
   "name": "@lumenary/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The shared core of the Lumenary Academy sites: design tokens, brand, site chrome, i18n, MDX lessons, courses, exercises and progress.",
   "license": "Apache-2.0",
   "type": "module",

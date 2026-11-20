@@ -11,7 +11,7 @@ export { RootLocalePage, rootLocaleScript } from "./RootLocalePage";
 
 /** The Lumenary sites, for footers and cross-links between them: change a site's address here, once. */
 export const ACADEMY_URL = "https://lumenary.academy/";
-/** Lumenary Scientia is still part of lumenary.academy; this becomes https://scientia.lumenary.academy when it moves. */
-export const SCIENTIA_URL = "https://lumenary.academy/en/divisions/";
+/** Lumenary Scientia's own site. */
+export const SCIENTIA_URL = "https://scientia.lumenary.academy/";
 export const LINGUA_URL = "https://lingua.lumenary.academy/";
 export const PREP_URL = "https://prep.lumenary.academy";
